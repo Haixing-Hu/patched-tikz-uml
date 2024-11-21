@@ -1,0 +1,91 @@
+--- a/tikz-uml.sty
++++ b/tikz-uml.sty
+@@ -136,6 +136,16 @@
+                        fill assembly connector/.get=\tikzumlAssemblyConnectorDefaultFillColor%
+ }%
+ %
++% node comparison
++%
++\newcommand{\ifstringequal}[4]{%
++  \ifnum\pdfstrcmp{#1}{#2}=0
++  #3%
++  \else
++  #4%
++  \fi
++}
++%
+ % utility : change default colors
+ \newcommand{\tikzumlset}[1]{%
+   \pgfkeys{/tikzuml/.cd,#1}%
+@@ -879,7 +889,7 @@
+   % straight line
+   \ifthenelse{\equal{\tikzumlRelationGeometry}{--}}%
+   {%
+-    \ifthenelse{\equal{\tikzumlSrcClassNodeName}{\tikzumlDestClassNodeName}}{%
++    \ifstringequal{\tikzumlSrcClassNodeName}{\tikzumlDestClassNodeName}{%
+       \def\arcNum{1}%
+       \def\arcNumT{1}%
+       %
+@@ -896,7 +906,7 @@
+           \xdef\tikzumlFirstArc{node[midway, inner sep=0, name=\tikzumlRelationName-1, anchor=center] {}}%
+           \xdef\tikzumlMidOneArc{node[midway, inner sep=0, name=\tikzumlRelationName-3, anchor=center] {}}%
+           %
+-          \ifthenelse{\equal{\tikzumlRelationRecursiveDirectionStart}{\tikzumlRelationRecursiveDirectionEnd}}{%
++          \ifstringequal{\tikzumlRelationRecursiveDirectionStart}{\tikzumlRelationRecursiveDirectionEnd}{%
+             \def\numArcs{3}%
+             \xdef\tikzumlLastArc{node[midway, inner sep=0, name=\tikzumlRelationName-5, anchor=center] {}}%
+             %
+@@ -1365,7 +1375,7 @@
+             \fi%
+           \fi%
+           %
+-          \ifthenelse{\equal{\tikzumlRelationRecursiveDirectionStart}{\tikzumlRelationRecursiveDirectionEnd}}{%
++          \ifstringequal{\tikzumlRelationRecursiveDirectionStart}{\tikzumlRelationRecursiveDirectionEnd}{%
+             \xdef\tikzumlPath{(\tikzumlSrcClassNodeName.\tikzumlRelationStartAngle) -- \tikzumlFirstArc (\tikzumlRelationName-2.center) -- \tikzumlMidOneArc (\tikzumlRelationName-4.center) -- \tikzumlLastArc (\tikzumlDestClassNodeName.\tikzumlRelationEndAngle) }%
+             \ifnum\thetikzumlStateLevel>0%
+               \def\tikzumlStateFitTmp{\csname tikzumlStateFit\tikzumlState@parent @@\tikzumlState@fitname\endcsname}%
+@@ -4227,7 +4237,7 @@
+   \expandafter\xdef\csname tikzumlLastChild@\tikzumlCallStartNodeName \endcsname{st-\tikzumlCall@nodeName}%
+   %
+   % top node of activity period of call receiver
+-  \ifthenelse{\equal{\tikzumlCallStartNodeName}{\tikzumlCallEndNodeName}}{%
++  \ifstringequal{\tikzumlCallStartNodeName}{\tikzumlCallEndNodeName}{%
+     \draw (st-\tikzumlCall@nodeName)+(0,-0.75*\tikzumlCallPadding ex) node[coordinate, name=tikzumlTmpNode] {};%
+     \node[tikzuml activity style] (et-\tikzumlCall@nodeName) at (\tikzumlCallStartNodeName |- tikzumlTmpNode) {};%
+   }{%
+@@ -4248,7 +4258,7 @@
+   \ifnum\tikzumlCall@lastchildNum=\thetikzumlCallNum%
+     %
+     % this test occurs a bug with latex package preview
+-    \ifthenelse{\equal{\tikzumlCallStartNodeName}{\tikzumlCallEndNodeName}}{%
++    \ifstringequal{\tikzumlCallStartNodeName}{\tikzumlCallEndNodeName}{%
+       \draw (\tikzumlCallBottomSrc)+(0,-\tikzumlCallPadding ex) node[coordinate, name=tikzumlTmpNode] {};%
+       \node[tikzuml activity style] (eb-\tikzumlCall@nodeName) at (\tikzumlCallEndNodeName |- tikzumlTmpNode) {};%
+       \draw (eb-\tikzumlCall@nodeName)+(0,-0.75*\tikzumlCallPadding ex) node[coordinate, name=tikzumlTmpNode] {};%
+@@ -4280,7 +4290,7 @@
+       \addtocounter{tikzumlCallEndFragmentNum}{-1}%
+     \fi%
+     %
+-    \ifthenelse{\equal{\tikzumlCallStartNodeName}{\tikzumlCallEndNodeName}}{%
++    \ifstringequal{\tikzumlCallStartNodeName}{\tikzumlCallEndNodeName}{%
+       \draw (\tikzumlCallBottomSrc)+(0,-\tikzumlcallheight ex) node[coordinate, name=tikzumlTmpNode] {};%
+       \node[tikzuml activity style] (eb-\tikzumlCall@nodeName) at (\tikzumlCallEndNodeName |- tikzumlTmpNode) {};%
+       \draw (eb-\tikzumlCall@nodeName)+(0,-0.75*\tikzumlCallPadding ex) node[coordinate, name=tikzumlTmpNode] {};%
+@@ -4297,7 +4307,7 @@
+   %
+   % draw activity periods
+   \begin{pgfonlayer}{activity}%
+-  \ifthenelse{\equal{\tikzumlCallStartNodeName}{\tikzumlCallEndNodeName}}{%
++  \ifstringequal{\tikzumlCallStartNodeName}{\tikzumlCallEndNodeName}{%
+     % draw root activity period only
+     \ifnum\thetikzumlCallLevel=0%
+       \draw[draw=\tikzumldrawcall, fill=\tikzumlfillcall] (st-\tikzumlCall@nodeName.north west) rectangle (sb-\tikzumlCall@nodeName.south east);%
+@@ -4332,7 +4342,7 @@
+   %
+   % draw call arrows
+   \begin{pgfonlayer}{connections}%
+-  \ifthenelse{\equal{\tikzumlCallStartNodeName}{\tikzumlCallEndNodeName}}{%
++  \ifstringequal{\tikzumlCallStartNodeName}{\tikzumlCallEndNodeName}{%
+     \draw[\tikzumlcallstyle, \tikzumldrawcall] (st-\tikzumlCall@nodeName.east) -- ++(2.5*\tikzumlCallPadding ex,0) %
+                                                -- ++(0,-0.75*\tikzumlCallPadding ex) %
+                                                node[font=\tikzumlDefaultFont, text=\tikzumltextcall, midway, right, name=\tikzumlCall@nodeName-op] {\tikzumlCallOp} %
