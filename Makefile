@@ -20,6 +20,8 @@ install: $(OUTPUT_FILE)
 	@echo "Installing $(OUTPUT_FILE) to $(INSTALL_DIR)..."
 	mkdir -p $(INSTALL_DIR)
 	cp $(OUTPUT_FILE) $(INSTALL_DIR)
+	@echo "Rehashing texmf..."
+	texhash
 	@echo "Installed successfully!"
 
 # target: clean up generated files

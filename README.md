@@ -76,7 +76,7 @@ The solution to this problem is based on a fix provided in a [StackExchange answ
 2. **Apply the Patch**:
    Use the `Makefile` to generate a patched version of the `tikz-uml.sty` file:
    ```bash
-   make patched
+   make patch
    ```
 
 3. **Install the Patched File**:
@@ -85,14 +85,14 @@ The solution to this problem is based on a fix provided in a [StackExchange answ
    make install
    ```
 
-4. **Refresh the TeX Database**:
-   Update the TeX database to recognize the new file:
-   ```bash
-   texhash
-   ```
-
-5. **Verify the Fix**:
+4. **Verify the Fix**:
    Compile the minimal example provided above to ensure the error no longer occurs.
+
+
+The above step 3 and step 4 can be combined into a single command:
+```bash
+make
+```
 
 ### Clean Up
 
