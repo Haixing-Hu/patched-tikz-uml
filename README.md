@@ -89,7 +89,7 @@ The solution to this problem is based on a fix provided in a [StackExchange answ
    Compile the minimal example provided above to ensure the error no longer occurs.
 
 
-The above step 3 and step 4 can be combined into a single command:
+The above step 2 and step 3 can be combined into a single command:
 ```bash
 make
 ```
